@@ -3,6 +3,7 @@
 #include "Common.h"
 #include "RenderObject.h"
 #include "DefaultGeometry/Cube.h"
+#include "Gate.h"
 
 class RENDERENGINE_API CRenderEngine
 {
@@ -21,4 +22,8 @@ private:
 	long m_Width = 800;
 	long m_Height = 600;
 	Cube* m_defaultCube;
+	StarGate* m_defaultGate;
+	InnerRing* m_defaultRing;
+
+	long frame_counter = 0;
 };

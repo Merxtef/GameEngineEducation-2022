@@ -34,6 +34,8 @@ CRenderEngine::CRenderEngine(HINSTANCE hInstance)
 	bgfx::setViewRect(0, 0, 0, bgfx::BackbufferRatio::Equal);
 
 	m_defaultCube = new Cube();
+	m_defaultGate = new StarGate();
+	m_defaultRing = new InnerRing();
 }
 
 CRenderEngine::~CRenderEngine()
@@ -94,19 +96,37 @@ HWND CRenderEngine::InitMainWindow(HINSTANCE hInstance)
 void CRenderEngine::Update()
 {
 	const bx::Vec3 at = { 0.0f, 0.0f,  0.0f };
-	const bx::Vec3 eye = { 0.0f, 10.0f, -5.0f };
+	const bx::Vec3 eye = { 0.5f, 4.0f, 0.5f };
+
 	float view[16];
 	bx::mtxLookAt(view, eye, at);
 	float proj[16];
 	bx::mtxProj(proj, 60.0f, float(m_Width) / float(m_Height), 0.1f, 100.0f, bgfx::getCaps()->homogeneousDepth);
+
 	bgfx::setViewTransform(0, view, proj);
 
-	bgfx::setVertexBuffer(0, m_defaultCube->GetVertexBuffer());
-	bgfx::setIndexBuffer(m_defaultCube->GetIndexBuffer());
+	// Gate
 
-	bgfx::submit(0, m_defaultCube->GetProgramHandle());
+	bgfx::setVertexBuffer(0, m_defaultGate->GetVertexBuffer());
+	bgfx::setIndexBuffer(m_defaultGate->GetIndexBuffer());
+
+	bgfx::submit(0, m_defaultGate->GetProgramHandle());
+
+	// Ring
+
+	float transform[16];
+	bx::mtxRotateY(transform, -0.01f * frame_counter);
+
+	bgfx::setTransform(transform);
+
+	bgfx::setVertexBuffer(0, m_defaultRing->GetVertexBuffer());
+	bgfx::setIndexBuffer(m_defaultRing->GetIndexBuffer());
+
+	bgfx::submit(0, m_defaultRing->GetProgramHandle());
 
 	bgfx::touch(0);
 
 	bgfx::frame();
+
+	++frame_counter;
 }
