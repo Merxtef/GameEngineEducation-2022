@@ -11,6 +11,7 @@
 #include "RenderThread.h"
 #include "CubeGameObject.h"
 #include "GameTimer.h"
+#include "INIReader.h"
 
 
 int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
@@ -22,6 +23,24 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 #if defined(_DEBUG)
     _CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
 #endif
+
+    char fKey = 'W';
+    char bKey = 'A';
+    char lKey = 'S';
+    char rKey = 'D';
+    char uKey = 'X';
+    char dKey = 'C';
+
+    {
+        INIReader configReader("../Config/actionmap.ini");
+
+        fKey = configReader.Get("Keyboard", "GoForward", "W")[0];
+        bKey = configReader.Get("Keyboard", "GoBack",    "S")[0];
+        lKey = configReader.Get("Keyboard", "GoLeft",    "A")[0];
+        rKey = configReader.Get("Keyboard", "GoRight",   "D")[0];
+        uKey = configReader.Get("Keyboard", "GoUp",      "X")[0];
+        dKey = configReader.Get("Keyboard", "GoDown",    "C")[0];
+    }
 
     GameTimer timer;
 
@@ -46,10 +65,34 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
         }
         else
         {
-            float t = 0;
             timer.Tick();
-            t = sin(timer.TotalTime())*2;
-            cube->SetPosition(t, 0.0f, 0.0f);
+
+            float dt = timer.DeltaTime();
+
+            if (GetAsyncKeyState(fKey))
+            {
+                cube->Move(0, 0, CUBE_SPEED * dt);
+            }
+            else if (GetAsyncKeyState(bKey))
+            {
+                cube->Move(0, 0, -CUBE_SPEED * dt);
+            }
+            else if (GetAsyncKeyState(lKey))
+            {
+                cube->Move(-CUBE_SPEED * dt, 0, 0);
+            }
+            else if (GetAsyncKeyState(rKey))
+            {
+                cube->Move(CUBE_SPEED * dt, 0, 0);
+            }
+            else if (GetAsyncKeyState(uKey))
+            {
+                cube->Move(0, CUBE_SPEED * dt, 0);
+            }
+            else if (GetAsyncKeyState(dKey))
+            {
+                cube->Move(0, -CUBE_SPEED * dt, 0);
+            }
 
             renderThread->OnEndFrame();
         }

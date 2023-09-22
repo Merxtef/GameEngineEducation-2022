@@ -15,6 +15,8 @@ public:
 
 	void SetPosition(float x, float y, float z);
 
+	void Move(float dx, float dy, float dz);
+
 	RenderProxy* const GetRenderProxy() { return m_pRenderProxy; }
 protected:
 	RenderProxy* m_pRenderProxy;
