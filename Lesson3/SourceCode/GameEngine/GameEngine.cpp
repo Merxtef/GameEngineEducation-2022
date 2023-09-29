@@ -14,6 +14,9 @@
 #include "InputHandler.h"
 
 
+static constexpr int CUBE_NUMBER = 100;
+
+
 int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
                      _In_opt_ HINSTANCE hPrevInstance,
                      _In_ LPWSTR    lpCmdLine,
@@ -30,8 +33,37 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
     RenderThread* renderThread = renderEngine->GetRT();
     InputHandler* inputHandler = new InputHandler();
 
-    GameObject* cube = new CubeGameObject();
-    renderThread->EnqueueCommand(RC_CreateCubeRenderObject, cube->GetRenderProxy());
+    //GameObject* cube = new CubeGameObject();
+    AbstractCube* cubes[CUBE_NUMBER] = {};
+
+    for (int i = 0; i < CUBE_NUMBER; ++i)
+    {
+        int type = rand() % 3;
+        AbstractCube* cube = nullptr;
+        
+        if (type == 0)
+        {
+            cube = new UserControlledCube(4);
+        }
+        else if (type == 1)
+        {
+            cube = new JumpingCube(3, -40);
+        }
+        else
+        {
+            cube = new SelfMovingCube(12.2f, 2.f);
+        }
+
+        cubes[i] = cube;
+
+        float x = ((i / 10) - 4.5f) * 4.f;
+        float y = -25.f;
+        float z = ((i % 10) - 0.5f) * 4.f;
+
+        cube->SetStart(x, y, z);
+
+        renderThread->EnqueueCommand(RC_CreateCubeRenderObject, cube->GetRenderProxy());
+    }
 
     MSG msg = { 0 };
 
@@ -56,6 +88,12 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
             timer.Tick();
             t = sin(timer.TotalTime())*2;
 
+            for (auto& cube : cubes)
+            {
+                cube->Act(inputHandler, timer.DeltaTime());
+            }
+
+            /*
             float velocity = 0.0f;
             if (inputHandler->GetInputState().test(eIC_GoLeft))
                 velocity -= 1.0f;
@@ -63,6 +101,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
                 velocity += 1.0f;
             newPositionX += velocity * timer.DeltaTime();
             cube->SetPosition(newPositionX, 0.0f, 0.0f);
+            */
 
             renderThread->OnEndFrame();
         }
