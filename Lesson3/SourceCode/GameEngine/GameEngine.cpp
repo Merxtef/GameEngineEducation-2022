@@ -93,16 +93,6 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
                 cube->Act(inputHandler, timer.DeltaTime());
             }
 
-            /*
-            float velocity = 0.0f;
-            if (inputHandler->GetInputState().test(eIC_GoLeft))
-                velocity -= 1.0f;
-            if (inputHandler->GetInputState().test(eIC_GoRight))
-                velocity += 1.0f;
-            newPositionX += velocity * timer.DeltaTime();
-            cube->SetPosition(newPositionX, 0.0f, 0.0f);
-            */
-
             renderThread->OnEndFrame();
         }
     }

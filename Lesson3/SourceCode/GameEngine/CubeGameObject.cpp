@@ -3,11 +3,6 @@
 
 constexpr float g = 9.8f;
 
-CubeGameObject::CubeGameObject()
-{
-	m_pRenderProxy = new CubeRenderProxy();
-}
-
 AbstractCube::AbstractCube()
 {
 	m_pRenderProxy = new CubeRenderProxy();

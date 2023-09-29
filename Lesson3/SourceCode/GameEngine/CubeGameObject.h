@@ -54,12 +54,3 @@ private:
 	float cur_speed = speed;
 };
 
-class CubeGameObject final : public GameObject
-{
-public:
-	CubeGameObject();
-
-private:
-	
-};
-
