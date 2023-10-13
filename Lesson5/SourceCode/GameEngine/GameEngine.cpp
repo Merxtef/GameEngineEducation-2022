@@ -32,7 +32,9 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
     InputHandler* inputHandler = new InputHandler();
     CScriptSystem* scriptSystem = new CScriptSystem();
 
-    EntitySystem* entitySystem = new EntitySystem(renderEngine, inputHandler);
+    IScriptProxy* scriptProxy = scriptSystem->CreateProxy("../../../Assets/scripts/movable.lua");
+
+    EntitySystem* entitySystem = new EntitySystem(renderEngine, inputHandler, scriptProxy);
 
     MSG msg = { 0 };
 

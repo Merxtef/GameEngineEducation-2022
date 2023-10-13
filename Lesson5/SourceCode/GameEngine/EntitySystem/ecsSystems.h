@@ -9,3 +9,8 @@ struct RenderEnginePtr
 {
   class RenderEngine* ptr;
 };
+
+struct ScriptProxyPtr
+{
+	class IScriptProxy* ptr;
+};

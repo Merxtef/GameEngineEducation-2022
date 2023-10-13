@@ -33,7 +33,6 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
     RenderThread* renderThread = renderEngine->GetRT();
     InputHandler* inputHandler = new InputHandler();
 
-    //GameObject* cube = new CubeGameObject();
     AbstractCube* cubes[CUBE_NUMBER] = {};
 
     for (int i = 0; i < CUBE_NUMBER; ++i)
